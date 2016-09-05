@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-md-2 side">
+        <div class="small-calendar">
+            <span class="sm-month-header">{{month.format("MMMM YYYY")}}</span>
+            <div class="sm-week-names">
+                <span class="sm-day-header">Su</span>
+                <span class="sm-day-header">Mo</span>
+                <span class="sm-day-header">Tu</span>
+                <span class="sm-day-header">We</span>
+                <span class="sm-day-header">Th</span>
+                <span class="sm-day-header">Fr</span>
+                <span class="sm-day-header">Sa</span>
+            </div>
+            <div class="sm-week text-center" ng-repeat="week in weeks">
+                <div class="sm-day" ng-class="{ 'sm-today': day.isToday, 'sm-different-month': !day.isCurrentMonth, 'sm-selected': day.date.isSame(selected) }" ng-click="select(day)" ng-repeat="day in week.days">
+                    {{day.number}}
+                    <!-- <div class="event">
+                            <p class="event-sm" ng-repeat="event in day.events" event-name="{{event.event_name}}" event-location="{{event.event_location}}" event-start-time="{{event.event_start_time}}" event-end-time="{{event.event_end_time}}"
+                             event-description="{{event.description}}" day-number="{{day.number}}">{{event.event_name}}<span class="event-time">{{event.eventTime}}</span>
+                            </p>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="time">
+            {{CurrentDate | date: 'hh:mm a'}}
+        </div>
+        <div class="today-heading">
+            <span>Today</span>
+        </div>
+        <div class="today-center">
+             <p class="today-event-sm" ng-repeat="event in todayEvents">{{event.event_name}} &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<span>{{event.eventTime}}</span></p>
+        </div>
+        <div class="weather-heading">
+            <span>Weather</span>
+        </div>
+        <div class="weather">
+            <div class="weather-info">
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="text-center header">
+            <div id="month-nav">
+                <i class="fa fa-chevron-up" ng-click="previous()"></i> 
+                <i class="fa fa-chevron-down" ng-click="next()"></i>
+                <span>{{month.format("MMMM, YYYY")}}</span>
+            </div>
+            <div class="pull-right" id="setting-nav">
+                <i class="fa fa-refresh fa-1x" ng-click="previous()"></i> &nbsp;&nbsp;
+                <i class="fa fa-gear" ng-click="next()"></i>
+            </div>
+        </div>
+        <div class="week-names">
+                <span class="day-header">Sunday</span>
+                <span class="day-header">Monday</span>
+                <span class="day-header">Tuesday</span>
+                <span class="day-header">Wednesday</span>
+                <span class="day-header">Thrusday</span>
+                <span class="day-header">Friday</span>
+                <span class="day-header">Saturday</span>
+        </div>
+        <div class="week" ng-repeat="week in weeks">
+                <div class="day" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }" ng-click="select(day)" ng-repeat="day in week.days">
+                    {{day.number}}
+                    <div class="event">
+                            <p class="event-sm" ng-repeat="event in day.events" event-name="{{event.event_name}}" event-location="{{event.event_location}}" event-start-time="{{event.event_start_time}}" event-end-time="{{event.event_end_time}}"
+                             event-description="{{event.description}}" day-number="{{day.number}}">{{event.event_name}}<span class="event-time">{{event.eventTime}}</span>
+                            </p>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div id="eventToolTip" class="messagepop">
+    <span id="popup-day" class="pop-date"></span>
+    <span class="pop-date">{{month.format("MMMM, YYYY")}}</span>
+    <br/> <br/>
+    <form name="eventInputFromm" id="eventInputFromm">
+        <input class="form-control" type="text" name="eventName" id="eventName" placeholder="Event Name" required/> <br/>
+        <input class="form-control" type="text" name="eventLocation" id="eventLocation" placeholder="Location" required/>
+        <label for="eventStartTime">Starts</label>
+        <input  class="form-control" type="text" name="eventStartTime" id="eventStartTime" required/>
+        <label for="eventEndTime">Ends</label>
+        <input  class="form-control" type="text" name="eventEndTime" id="eventEndTime" required/>
+        <label><input type="checkbox" name="all-day-check" id="all-day-check" value=0> All day </label> <br/>
+        <label for="description">Description</label>
+        <textarea class="form-control" name="description" id="descriptionText" rows="3"></textarea>
+        <button type="button" class="btn btn-primary btn-md" id="event-close"> 
+        &nbsp; &nbsp; Close &nbsp; &nbsp;</button> 
+        <button type="submit" class="btn btn-primary btn-md pull-right" id="event-save">
+           &nbsp; &nbsp; Save &nbsp; &nbsp;
+        </button>
+    </form>
+</div>
