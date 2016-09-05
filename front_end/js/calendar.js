@@ -35,22 +35,38 @@ app.controller("mainController", function($scope, $http){
     $scope.CurrentDate = new Date();
     $(document).on('dblclick', '.day', function(e) {
             var pos = $(this).position();
-            $('#popup-day').text($(this).text());
-            $('#eventToolTip').css('top', pos.top - 50);
+            $('#popup-day').text($(this).attr('day-number'));
+            if(pos.top - 200 < 0) {
+                $('#eventToolTip').css('top', 0);
+            }
+            else {
+                $('#eventToolTip').css('top', pos.top - 200);
+            }
             $('#eventToolTip').css('left', pos.left + 360);
+            $('#event-delete').hide();
+            $('#event-close').show();
             $('#eventToolTip').show();
         });
 
     $(document).on('dblclick', '.event-sm', function(e) {
             var pos = $(this).position();
             $('#popup-day').text($(this).attr('day-number'));
-            $('#eventToolTip').css('top', pos.top - 50);
+            $('#eventToolTip').css('top', pos.top - 200);
             $('#eventToolTip').css('left', pos.left + 360);
+            if(pos.top - 200 < 0) {
+                $('#eventToolTip').css('top', 0);
+            }
+            else {
+                $('#eventToolTip').css('top', pos.top - 200);
+            }
             $('#eventName').val($(this).attr('event-name'));
             $('#eventLocation').val($(this).attr('event-location'));
             $('#eventStartTime').val($(this).attr('event-start-time'));
             $('#eventEndTime').val($(this).attr('event-end-time'));
             $('#descriptionText').val($(this).attr('event-description'));
+            $('#eventId').val($(this).attr('event-id'));
+            //$('#event-close').hide();
+            $('#event-delete').show();
             $('#eventToolTip').show();
             e.stopPropagation();
         });
@@ -62,7 +78,35 @@ app.controller("mainController", function($scope, $http){
             $('#eventEndTime').val('');
             $('#all-day-check').val(0);
             $('#descriptionText').val('');
+            $('#eventId').val('');
             $('#eventToolTip').hide();
+
+        });
+
+    $('#event-delete').click(function(ev) {
+        var account_id = 'ACC12345';
+        var event_id = $('#eventId').val();
+        $http({
+            method: 'DELETE',
+            data: {}, 
+            url: "http://127.0.0.1:8001/event/v1/events/" + event_id + '/', 
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            }).then(function successCallback(response) {
+                $('#eventName').val('');
+                $('#eventLocation').val('');
+                $('#eventStartTime').val('');
+                $('#eventEndTime').val('');
+                $('#all-day-check').val(0);
+                $('#descriptionText').val('');
+                $('#eventToolTip').hide();
+                _get_events($scope.currenStart, $scope.month, $scope);
+
+            }, 
+                function errorCallback(response) {
+                console.log("Error");
+            });
 
         });
 
@@ -70,24 +114,24 @@ app.controller("mainController", function($scope, $http){
             // ev.preventDefault();
             var data = {};
             var account_id = 'ACC12345';
+            data.event_id = $('#eventId').val();
             data.event_name = $('#eventName').val();
             data.event_location = $('#eventLocation').val();
             data.event_start_time = $('#eventStartTime').val();
             data.event_end_time = $('#eventEndTime').val();
             data.allDay = $('#all-day-check').val();
             data.description = $('#descriptionText').val();
-            console.log(data);
-            $http({
-                    method: 'POST',
+            if (data.event_id) {
+                $http({
+                    method: 'PUT',
                     data: 'account_id=' + account_id + '&event_name=' + data.event_name +
                            '&event_location=' + data.event_location + '&event_start_time=' + data.event_start_time
                            + '&event_end_time=' + data.event_end_time + '&description=' + data.description, 
-                    url: "http://127.0.0.1:8001/event/v1/events/", 
+                    url: "http://127.0.0.1:8001/event/v1/events/" + data.event_id + '/', 
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     }).then(function successCallback(response) {
-                       console.log(response.data);
                         $('#eventName').val('');
                         $('#eventLocation').val('');
                         $('#eventStartTime').val('');
@@ -100,9 +144,34 @@ app.controller("mainController", function($scope, $http){
                     }, 
                         function errorCallback(response) {
                         console.log("Error");
-                        console.log(response.data);
                 });
-            });
+            }
+            else {
+                $http({
+                        method: 'POST',
+                        data: 'account_id=' + account_id + '&event_name=' + data.event_name +
+                               '&event_location=' + data.event_location + '&event_start_time=' + data.event_start_time
+                               + '&event_end_time=' + data.event_end_time + '&description=' + data.description, 
+                        url: "http://127.0.0.1:8001/event/v1/events/", 
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        }).then(function successCallback(response) {
+                            $('#eventName').val('');
+                            $('#eventLocation').val('');
+                            $('#eventStartTime').val('');
+                            $('#eventEndTime').val('');
+                            $('#all-day-check').val(0);
+                            $('#descriptionText').val('');
+                            $('#eventToolTip').hide();
+                            _get_events($scope.currenStart, $scope.month, $scope);
+
+                        }, 
+                            function errorCallback(response) {
+                            console.log("Error");
+                    });
+            }
+         });
 
     $('#all-day-check').click(function(ev) {
             if($(this).val() == 0) {
@@ -173,7 +242,6 @@ app.controller("mainController", function($scope, $http){
                         }
                     }, function errorCallback(response) {
                         console.log("Error");
-                        console.log(response.data);
                     });
                 
                 
@@ -201,18 +269,10 @@ app.controller("mainController", function($scope, $http){
 
         $scope.next = function() {
             var next = $scope.month.clone();
-            //console.log(next);
-            ///     console.log(next.month());
             next.month(next.month()+1).date(1);
-            //_removeTime(next.month(next.month()+1)).date(1);
-            // console.log(next);
-            //next.month(next.month() + 1);
-            // console.log(next);
             next.day(0);
-            //console.log(next);
             $scope.month.month($scope.month.month()+1);
             $scope.currenStart = next.clone(); 
-            //_buildMonth($scope, next, $scope.month);
             _get_events(next, $scope.month, $scope);
         };
 
@@ -271,12 +331,10 @@ app.controller("mainController", function($scope, $http){
                         eventStartDateTime.add(1, 'd');
                     }
                }
-                console.log(date_event_map);
                _buildMonth($scope, start, month, date_event_map);
             }, 
                 function errorCallback(response) {
                 console.log("Error");
-                console.log(response.data);
                 _buildMonth($scope, start, month, date_event_map);
             });
     }
@@ -303,7 +361,6 @@ app.controller("mainController", function($scope, $http){
     }
 
     function _buildWeek(date, month, date_event_map) {
-        //console.log(date_event_map);
         var days = [];
         for (var i = 0; i < 7; i++) {
             
@@ -319,84 +376,12 @@ app.controller("mainController", function($scope, $http){
                 isCurrentMonth: date.month() === month.month(),
                 isToday: date.isSame(new Date(), "day"),
                 date: date,
-                events: events
-            });
-            date = date.clone();
-            date.add(1, "d");
-        }
-        console.log(days);
-        return days;
-    }
-
-});
-
-app.directive("calendar", function() {
-    return {
-        restrict: "E",
-        templateUrl: "partials/calendarTemplate.html",
-        scope: {
-            selected: '='
-        },
-        link: function(scope) {
-            console.log(scope.selected);
-            scope.selected = _removeTime(scope.selected || moment());
-            console.log(scope.selected);
-            scope.month = scope.selected.clone();
-            console.log(scope.month);
-            var start = scope.selected.clone();
-            start.date(1);
-            _removeTime(start.day(0));
-
-            _buildMonth(scope, start, scope.month);
-
-            scope.select = function(day) {
-                scope.selected = day.date;  
-            };
-
-            scope.next = function() {
-                var next = scope.month.clone();
-                _removeTime(next.month(next.month()+1)).date(1);
-                scope.month.month(scope.month.month()+1);
-                _buildMonth(scope, next, scope.month);
-            };
-
-            scope.previous = function() {
-                var previous = scope.month.clone();
-                _removeTime(previous.month(previous.month()-1).date(1));
-                scope.month.month(scope.month.month()-1);
-                _buildMonth(scope, previous, scope.month);
-            };
-        }
-    };
-
-    function _removeTime(date) {
-        return date.day(0).hour(0).minute(0).second(0).millisecond(0);
-    }
-
-    function _buildMonth(scope, start, month) {
-        scope.weeks = [];
-        var done = false, date = start.clone(), monthIndex = date.month(), count = 0;
-        while (!done) {
-            scope.weeks.push({ days: _buildWeek(date.clone(), month) });
-            date.add(1, "w");
-            done = count++ > 2 && monthIndex !== date.month();
-            monthIndex = date.month();
-        }
-    }
-
-    function _buildWeek(date, month) {
-        var days = [];
-        for (var i = 0; i < 7; i++) {
-            days.push({
-                name: date.format("dd").substring(0, 1),
-                number: date.date(),
-                isCurrentMonth: date.month() === month.month(),
-                isToday: date.isSame(new Date(), "day"),
-                date: date
+                events: events.slice(0, 4)
             });
             date = date.clone();
             date.add(1, "d");
         }
         return days;
     }
+
 });

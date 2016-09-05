@@ -48,8 +48,8 @@
                 <span>{{month.format("MMMM, YYYY")}}</span>
             </div>
             <div class="pull-right" id="setting-nav">
-                <i class="fa fa-refresh fa-1x" ng-click="previous()"></i> &nbsp;&nbsp;
-                <i class="fa fa-gear" ng-click="next()"></i>
+                <i class="fa fa-refresh fa-1x"></i> &nbsp;&nbsp;
+                <i class="fa fa-gear"></i>
             </div>
         </div>
         <div class="week-names">
@@ -62,10 +62,12 @@
                 <span class="day-header">Saturday</span>
         </div>
         <div class="week" ng-repeat="week in weeks">
-                <div class="day" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }" ng-click="select(day)" ng-repeat="day in week.days">
+                <div class="day" day-number="{{day.number}}" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }" ng-click="select(day)" ng-repeat="day in week.days">
                     {{day.number}}
                     <div class="event">
-                            <p class="event-sm" ng-repeat="event in day.events" event-name="{{event.event_name}}" event-location="{{event.event_location}}" event-start-time="{{event.event_start_time}}" event-end-time="{{event.event_end_time}}"
+                            <p class="event-sm" ng-repeat="event in day.events" 
+                            event-id="{{event.id}}"
+                            event-name="{{event.event_name}}" event-location="{{event.event_location}}" event-start-time="{{event.event_start_time}}" event-end-time="{{event.event_end_time}}"
                              event-description="{{event.description}}" day-number="{{day.number}}">{{event.event_name}}<span class="event-time">{{event.eventTime}}</span>
                             </p>
                     </div>
@@ -79,6 +81,7 @@
     <span class="pop-date">{{month.format("MMMM, YYYY")}}</span>
     <br/> <br/>
     <form name="eventInputFromm" id="eventInputFromm">
+        <input type="hidden" name="eventId" id="eventId" />
         <input class="form-control" type="text" name="eventName" id="eventName" placeholder="Event Name" required/> <br/>
         <input class="form-control" type="text" name="eventLocation" id="eventLocation" placeholder="Location" required/>
         <label for="eventStartTime">Starts</label>
@@ -88,10 +91,12 @@
         <label><input type="checkbox" name="all-day-check" id="all-day-check" value=0> All day </label> <br/>
         <label for="description">Description</label>
         <textarea class="form-control" name="description" id="descriptionText" rows="3"></textarea>
-        <button type="button" class="btn btn-primary btn-md" id="event-close"> 
-        &nbsp; &nbsp; Close &nbsp; &nbsp;</button> 
-        <button type="submit" class="btn btn-primary btn-md pull-right" id="event-save">
-           &nbsp; &nbsp; Save &nbsp; &nbsp;
+        <button type="button" class="btn btn-primary btn-sm" id="event-close"> 
+         &nbsp; Close &nbsp; &nbsp;</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="event-delete"> 
+        &nbsp; &nbsp; Delete &nbsp; &nbsp; &nbsp;</button>
+        <button type="submit" class="btn btn-primary btn-sm pull-right" id="event-save">
+        &nbsp; &nbsp; Save &nbsp;
         </button>
     </form>
 </div>

@@ -15,6 +15,8 @@ class Event(models.Model):
     description = models.TextField(default='', blank=True)
     is_deleted = models.BooleanField(default=False)
     account = models.ForeignKey(Account)
+    google_calender_id = models.CharField(max_length=255, null=True, blank=True)
+    is_synced = models.BooleanField(default=False)
 
     def __unicode__(self):
         return str(self.event_id)
