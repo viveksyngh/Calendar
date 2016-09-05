@@ -29,7 +29,7 @@
             <span>Today</span>
         </div>
         <div class="today-center">
-             <p class="today-event-sm" ng-repeat="event in todayEvents">{{event.event_name}} &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<span>{{event.eventTime}}</span></p>
+             <p class="today-event-sm" ng-repeat="event in todayEvents">{{event.event_name}}<span class="today-event-time">{{event.eventTime}}</span></p>
         </div>
         <div class="weather-heading">
             <span>Weather</span>
