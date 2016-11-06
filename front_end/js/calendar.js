@@ -211,33 +211,33 @@ app.controller("mainController", function($scope, $http){
                         var temp_min = response.data.main.temp_min-273.15;
                         if( 801 <= response.data.weather[0].id <= 804) {
                             $('.weather-info').html('<span class="weather-img"><i class="fa fa-cloud fa-3x"></i></span>' + '&nbsp &nbsp' + 
-                                '<span class="temp-max">' + temp_max + ' &nbsp' + '</span>' + 
-                                '<span class="temp-min">' + temp_min + '°C  &nbsp' + '</span>' + 
+                                '<span class="temp-max">' + Math.round(temp_max) + ' &nbsp' + '</span>' + 
+                                '<span class="temp-min">' + Math.round(temp_min) + '°C  &nbsp' + '</span>' + 
                                 '<p class="weather-name">Cloudy</p>');
                         }
                         else if ( 200 <= response.data.weather[0].id <= 232) {
                             $('.weather-info').html('<span class="weather-img"><i class="fa fa-bolt fa-3x"></i></span>' + '&nbsp &nbsp' + 
-                                '<span class="temp-max">' + temp_max + ' &nbsp' + '</span>' + 
-                                '<span class="temp-min">' + temp_min + '°C  &nbsp' + '</span>' + 
+                                '<span class="temp-max">' + Math.round(temp_max) + ' &nbsp' + '</span>' + 
+                                '<span class="temp-min">' + Math.round(temp_min) + '°C  &nbsp' + '</span>' + 
                                 '<p class="weather-name">Thunderstrom</p>');
                         }
                         else if( 300 <= response.data.weather[0].id <= 321 ) {
                             $('.weather-info').html('<span class="weather-img"><i class="fa fa-cloud fa-3x"></i></span>' + '&nbsp &nbsp' + 
-                                '<span class="temp-max">' + temp_max + ' &nbsp' + '</span>' + 
-                                '<span class="temp-min">' + temp_min + '°C  &nbsp' + '</span>' + 
+                                '<span class="temp-max">' + Math.round(temp_max) + ' &nbsp' + '</span>' + 
+                                '<span class="temp-min">' + Math.round(temp_min) + '°C  &nbsp' + '</span>' + 
                                 '<p class="weather-name">Drizzle</p>');
                         }
 
                         else if( 500 <= response.data.weather[0].id <= 531 ) {
                             $('.weather-info').html('<span class="weather-img"><i class="fa fa-cloud fa-3x"></i></span>' + '&nbsp &nbsp' + 
-                                '<span class="temp-max">' + temp_max + ' &nbsp' + '</span>' + 
-                                '<span class="temp-min">' + temp_min + '°C  &nbsp' + '</span>' + 
+                                '<span class="temp-max">' + Math.round(temp_max) + ' &nbsp' + '</span>' + 
+                                '<span class="temp-min">' + Math.round(temp_min) + '°C  &nbsp' + '</span>' + 
                                 '<p class="weather-name">Rain</p>');
                         }
                      else if( response.data.weather[0].id == 800 ) {
                             $('.weather-info').html('<span class="weather-img"><i class="fa fa-sun-o fa-3x"></i></span>' + '&nbsp &nbsp' + 
-                                '<span class="temp-max">' + temp_max + ' &nbsp' + '</span>' + 
-                                '<span class="temp-min">' + temp_min + '°C  &nbsp' + '</span>' + 
+                                '<span class="temp-max">' + Math.round(temp_max) + ' &nbsp' + '</span>' + 
+                                '<span class="temp-min">' + Math.round(temp_min) + '°C  &nbsp' + '</span>' + 
                                 '<p class="weather-name">Clear</p>');
                         }
                     }, function errorCallback(response) {
